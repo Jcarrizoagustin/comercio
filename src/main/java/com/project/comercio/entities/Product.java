@@ -1,6 +1,7 @@
 package com.project.comercio.entities;
 
 import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -13,7 +14,8 @@ import java.util.UUID;
 public class Product implements Serializable{
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GenericGenerator(name = "UUID",strategy = "uuid2")
+    @GeneratedValue(generator = "UUID")
     @Column(name = "id_product")
     private UUID id;
 
