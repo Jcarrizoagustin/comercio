@@ -29,12 +29,18 @@ public class Sale implements Serializable {
     @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm",iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime date;
 
-    @OneToMany(mappedBy = "sale")
+    @OneToMany(mappedBy = "sale",cascade = CascadeType.PERSIST)
     private List<Item> items;
 
     @Column(name = "total")
     private BigDecimal total;
 
-
-
+    public void calcTotal(){
+        BigDecimal total = BigDecimal.valueOf(0);
+        for(Item item : items){
+            item.calcSubtotal();
+            total.add(item.getSubtotal());
+        }
+        this.total = total;
+    }
 }

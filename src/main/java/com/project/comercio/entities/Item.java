@@ -27,9 +27,12 @@ public class Item implements Serializable {
     @Column(name = "subtotal")
     private BigDecimal subtotal;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "fk_sale",referencedColumnName = "id_sale")
     private Sale sale;
 
+    public void calcSubtotal(){
+        this.subtotal = this.product.getSalePrice().multiply(BigDecimal.valueOf(quantity));
+    }
 
 }
