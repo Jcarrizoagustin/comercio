@@ -7,6 +7,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,7 +31,7 @@ public class Sale implements Serializable {
     private LocalDateTime date;
 
     @OneToMany(mappedBy = "sale",cascade = CascadeType.PERSIST)
-    private List<Item> items;
+    private List<Item> items = new ArrayList<>();
 
     @Column(name = "total")
     private BigDecimal total;
@@ -39,7 +40,7 @@ public class Sale implements Serializable {
         BigDecimal total = BigDecimal.valueOf(0);
         for(Item item : items){
             item.calcSubtotal();
-            total.add(item.getSubtotal());
+            total = total.add(item.getSubtotal());
         }
         this.total = total;
     }
