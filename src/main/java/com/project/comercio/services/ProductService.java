@@ -2,6 +2,7 @@ package com.project.comercio.services;
 
 import com.project.comercio.entities.Product;
 import com.project.comercio.exceptions.EntityNotFoundException;
+import com.project.comercio.exceptions.StockConflictException;
 import com.project.comercio.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,5 +29,31 @@ public class ProductService {
 
     public List<Product> allProducts(){
         return repository.findAll();
+    }
+
+    //Chequea si hay stock para un producto en particular
+    private boolean checkStock(Integer units,UUID productId){
+        if(repository.existsById(productId)){
+            Product product = repository.findById(productId).get();
+            if(units <= product.getStock() ){
+                return true;
+            }else{
+                return false;
+            }
+        }else{
+            throw new EntityNotFoundException("No existe el producto para el id: " + productId.toString());
+        }
+    }
+
+    public void updateStock(Integer units, UUID productId){
+        Integer stock = repository.findById(productId).get().getStock();
+        if(this.checkStock(units,productId)){
+            Integer newStock = stock - units;
+            Product product = repository.findById(productId).get();
+            product.setStock(newStock);
+            repository.save(product);
+        }else{
+            throw new StockConflictException("No hay stock. Stock solicitado: " + units + ", stock disponible: " + stock);
+        }
     }
 }
