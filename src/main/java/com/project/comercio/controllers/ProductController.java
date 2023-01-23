@@ -44,4 +44,17 @@ public class ProductController {
         Product product = service.findById(id);
         return ResponseEntity.ok(mapper.productToProductResponseDTO(product));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity removeProduct(@PathVariable UUID id){
+        service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductResponseDTO> updateProduct(@PathVariable UUID id, @RequestBody ProductCreateDTO dto){
+        Product product = mapper.productCreateDTOToProduct(dto);
+        ProductResponseDTO responseDTO = mapper.productToProductResponseDTO(service.update(id,product));
+        return ResponseEntity.ok(responseDTO);
+    }
 }

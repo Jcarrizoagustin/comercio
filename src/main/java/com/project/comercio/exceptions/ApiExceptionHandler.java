@@ -1,5 +1,6 @@
 package com.project.comercio.exceptions;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -37,7 +38,10 @@ public class ApiExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.CONFLICT)
-    @ExceptionHandler({ConflictException.class})
+    @ExceptionHandler({
+            ConflictException.class,
+            DataIntegrityViolationException.class
+    })
     @ResponseBody
     public ErrorMessage conflict(HttpServletRequest request, Exception exception){
         return new ErrorMessage(exception, request.getRequestURI());

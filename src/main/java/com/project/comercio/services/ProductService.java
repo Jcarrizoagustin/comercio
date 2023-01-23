@@ -1,5 +1,6 @@
 package com.project.comercio.services;
 
+import com.project.comercio.dtos.product.ProductCreateDTO;
 import com.project.comercio.entities.Product;
 import com.project.comercio.exceptions.EntityNotFoundException;
 import com.project.comercio.exceptions.StockConflictException;
@@ -25,6 +26,28 @@ public class ProductService {
             throw new EntityNotFoundException("No existe el producto para el id: "+id);
         }
         return repository.findById(id).get();
+    }
+
+    public void delete(UUID id){
+        if(!repository.existsById(id)){
+            throw new EntityNotFoundException("No existe el producto para el id: "+id);
+        }
+        repository.deleteById(id);
+    }
+
+    public Product update(UUID id, Product dto){
+        if(!repository.existsById(id)){
+            throw new EntityNotFoundException("No existe el producto para el id: "+id);
+        }
+        Product product = repository.findById(id).get();
+        product.setName(dto.getName());
+        product.setCategory(dto.getCategory());
+        product.setBrand(dto.getBrand());
+        product.setDescription(dto.getDescription());
+        product.setCostPrice(dto.getCostPrice());
+        product.setSalePrice(dto.getSalePrice());
+        product.setStock(dto.getStock());
+        return repository.save(product);
     }
 
     public List<Product> allProducts(){
