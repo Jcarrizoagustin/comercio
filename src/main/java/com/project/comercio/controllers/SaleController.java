@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -27,6 +28,11 @@ public class SaleController {
                 .map(sale -> mapper.saleToSaleResponseDTO(sale))
                 .collect(Collectors.toList());
         return ResponseEntity.ok(responseDTOS);
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<SaleResponseDTO> getSaleById(@PathVariable UUID id){
+        Sale sale = service.findById(id);
+        return ResponseEntity.ok(mapper.saleToSaleResponseDTO(sale));
     }
 
     @PostMapping

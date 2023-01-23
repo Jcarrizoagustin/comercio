@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,7 +23,6 @@ public class SaleMapperImpl implements SaleMapper{
     @Autowired
     private ItemMapper itemMapper;
 
-    //TODO clienteService
     @Autowired
     private ClientService clientService;
 
@@ -31,7 +32,7 @@ public class SaleMapperImpl implements SaleMapper{
     public Sale saleCreationDTOToSale(SaleCreationDTO dto) {
         Sale sale = new Sale();
         List<Item> items = dto.getDtos().stream()
-                .map(item -> itemMapper.itemCreationDTOToItem(item))
+                .map(item -> itemMapper.itemCreationDTOToItem(item,sale))
                 .collect(Collectors.toList());
         sale.setItems(items);
         sale.setClient(clientService.getClientById(dto.getIdClient()));
@@ -44,7 +45,7 @@ public class SaleMapperImpl implements SaleMapper{
         SaleResponseDTO dto = new SaleResponseDTO();
         dto.setId(sale.getId());
         dto.setClient(sale.getClient().getName() +" " + sale.getClient().getSurname());
-        dto.setDate(sale.getDate().toString());
+        dto.setDate(sale.getDate().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)));
         dto.setTotal(sale.getTotal().toString());
         List<ItemResponseDTO> itemsDtos = sale.getItems().stream()
                 .map(item -> itemMapper.itemToItemResponseDTO(item)

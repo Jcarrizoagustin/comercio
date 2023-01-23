@@ -3,7 +3,7 @@ package com.project.comercio.mappers.item;
 import com.project.comercio.dtos.item.ItemCreationDTO;
 import com.project.comercio.dtos.item.ItemResponseDTO;
 import com.project.comercio.entities.Item;
-import com.project.comercio.repositories.ProductRepository;
+import com.project.comercio.entities.Sale;
 import com.project.comercio.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -14,10 +14,11 @@ public class ItemMapperImpl implements ItemMapper{
     private ProductService service;
 
     @Override
-    public Item itemCreationDTOToItem(ItemCreationDTO dto) {
+    public Item itemCreationDTOToItem(ItemCreationDTO dto, Sale sale) {
         Item item = new Item();
         item.setProduct(service.findById(dto.getIdProduct()));
         item.setQuantity(dto.getQuantity());
+        item.setSale(sale);
         return item;
     }
 

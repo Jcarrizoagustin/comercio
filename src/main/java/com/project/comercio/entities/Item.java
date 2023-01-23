@@ -27,8 +27,8 @@ public class Item implements Serializable {
     @Column(name = "subtotal")
     private BigDecimal subtotal;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "fk_sale",referencedColumnName = "id_sale")
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "fk_sale")
     private Sale sale;
 
     public void calcSubtotal(){

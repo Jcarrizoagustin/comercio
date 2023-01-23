@@ -30,7 +30,7 @@ public class Sale implements Serializable {
     @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm",iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime date;
 
-    @OneToMany(mappedBy = "sale",cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "sale",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Item> items = new ArrayList<>();
 
     @Column(name = "total")
