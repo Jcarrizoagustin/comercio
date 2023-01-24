@@ -1,6 +1,7 @@
 package com.project.comercio.services;
 
 import com.project.comercio.entities.Client;
+import com.project.comercio.entities.Sale;
 import com.project.comercio.exceptions.EntityNotFoundException;
 import com.project.comercio.repositories.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,8 @@ import java.util.UUID;
 @Service
 public class ClientService {
 
+    @Autowired
+    private SaleService saleService;
     @Autowired
     private ClientRepository repository;
 
@@ -30,6 +33,8 @@ public class ClientService {
         return repository.findAll();
     }
 
-
+    public List<Sale> getAllSalesForClient(Client client){
+        return saleService.allSalesForClient(client);
+    }
 
 }

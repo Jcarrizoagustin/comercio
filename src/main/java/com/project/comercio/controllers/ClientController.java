@@ -2,8 +2,11 @@ package com.project.comercio.controllers;
 
 import com.project.comercio.dtos.client.ClientCreationDTO;
 import com.project.comercio.dtos.client.ClientResponseDTO;
+import com.project.comercio.dtos.sale.SaleResponseDTO;
 import com.project.comercio.entities.Client;
+import com.project.comercio.entities.Sale;
 import com.project.comercio.mappers.client.ClientMapper;
+import com.project.comercio.mappers.sale.SaleMapper;
 import com.project.comercio.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +23,8 @@ public class ClientController {
     private ClientService service;
     @Autowired
     private ClientMapper mapper;
+    @Autowired
+    private SaleMapper saleMapper;
 
     @GetMapping("/{id}")
     public ResponseEntity<ClientResponseDTO> getClientById(@PathVariable UUID id){
@@ -38,5 +43,16 @@ public class ClientController {
     public ResponseEntity<ClientResponseDTO> postClient(@RequestBody ClientCreationDTO dto){
         Client created = service.saveClient(mapper.clientCreationDTOToClient(dto));
         return ResponseEntity.ok(mapper.clientToClientResponseDTO(created));
+    }
+
+    //Todas las compras de un cliente por su id
+    @GetMapping("/{id}/orders")
+    public ResponseEntity<List<SaleResponseDTO>> salesForClient(@PathVariable UUID id){
+        Client client = service.getClientById(id);
+        List<Sale> sales = service.getAllSalesForClient(client);
+        List<SaleResponseDTO> responseDTOS = sales.stream()
+                .map(sale -> saleMapper.saleToSaleResponseDTO(sale))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(responseDTOS);
     }
 }

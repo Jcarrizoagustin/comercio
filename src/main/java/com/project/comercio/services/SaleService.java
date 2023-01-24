@@ -1,8 +1,10 @@
 package com.project.comercio.services;
 
+import com.project.comercio.entities.Client;
 import com.project.comercio.entities.Item;
 import com.project.comercio.entities.Sale;
 import com.project.comercio.exceptions.EntityNotFoundException;
+import com.project.comercio.exceptions.NotFoundException;
 import com.project.comercio.repositories.SaleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,5 +34,13 @@ public class SaleService {
             return repository.findById(id).get();
         }
         throw new EntityNotFoundException("No existe la venta para el id: " + id.toString());
+    }
+
+    public List<Sale> allSalesForClient(Client client){
+        List<Sale> sales = repository.findSaleByClient(client);
+        if(sales.isEmpty()){
+            throw new NotFoundException("No se encontraron ventas para el idCliente proporcionado: "+client.getId().toString());
+        }
+        return sales;
     }
 }
