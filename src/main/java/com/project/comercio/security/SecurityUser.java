@@ -10,11 +10,14 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor
 public class SecurityUser implements UserDetails {
-    private final User user;
+    private User user;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return user.getAuthorities().stream().map(SecurityAuthority::new).collect(Collectors.toList());
+        return user.getAuthorities()
+                .stream()
+                .map(authority -> new SecurityAuthority(authority))
+                .collect(Collectors.toList());
     }
 
     @Override
